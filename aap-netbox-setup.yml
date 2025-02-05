@@ -28,30 +28,41 @@
           username: admin
           ssh_key_data: "{{ lookup('file', '/home/rhel/.ssh/id_ed25519' ) }}"
 
-#    - name: (EXECUTION) Create credential type for NetBox
-#      ansible.controller.credential_type:
-#        name: netbox-api
-#        description: Credentials type for NetBox
-#        kind: cloud
-#        inputs: 
-#          fields:
-#            - id: NETBOX_API
-#              type: string
-#              label: NetBox Host URL
-#            - id: NETBOX_TOKEN
-#              type: string
-#              label: NetBox API Token
-#              secret: true
-#          required:
-#            - NETBOX_API
-#            - NETBOX_TOKEN
-#        injectors:
-#          env:
-#            NETBOX_API: '{{ NETBOX_API }}'
-#            NETBOX_TOKEN: '{{ NETBOX_TOKEN }}'
-#        state: present
-#        validate_certs: false
-
+    - name: (EXECUTION) Create credential type for NetBox
+      ansible.controller.credential_type:
+        name: netbox-setup-api
+        description: Credentials type for NetBox
+        kind: cloud
+        inputs: 
+          fields:
+            - id: NETBOX_URL
+              type: string
+              label: NetBox Host URL
+            - id: NETBOX_TOKEN
+              type: string
+              label: NetBox API Token
+              secret: true
+          required:
+            - NETBOX_URL
+            - NETBOX_TOKEN
+        injectors:
+          env:
+            NETBOX_URL: '{{ NETBOX_URL }}'
+            NETBOX_TOKEN: '{{ NETBOX_TOKEN }}'
+        state: present
+        validate_certs: false
+        
+    - name: (EXECUTION) Create credentials for the netbox-setup
+      ansible.controller.credential:
+        validate_certs: false
+        controller_username: admin
+        controller_password: ansible123!
+        name: netbox-setup-creds
+        credential_type: netbox-setup-api
+        organization: Default
+        inputs:
+          NETBOX_API: http://netbox:8000
+          NETBOX_TOKEN: 0123456789abcdef0123456789abcdef01234567
 
     - name: (EXECUTION) Create new execution environment
       ansible.controller.execution_environment:
@@ -73,7 +84,7 @@
 
     - name: (EXECUTION) Create new Project from git
       ansible.controller.project:
-        name: "NetBox Setup Project"
+        name: "netbox-setup-project"
         organization: Default
         state: present
         scm_type: git
@@ -82,17 +93,21 @@
         controller_username: admin
         controller_password: ansible123!
 
+    - name: (EXECUTION) Create an inventory in automation controller
+      ansible.controller.inventory:
+        name: netbox-setup-inventory
+        organization: Default
 
     - name: (EXECUTION) Create a new Job Template
       ansible.controller.job_template:
-        name: "NetBox Setup Playbook"
+        name: "netbox-setup-playbook"
         organization: Default
         state: present
-        inventory: netbox-inventory
+        inventory: netbox-setup-inventory
         become_enabled: True
-        playbook: netbox-setup.yml
-        project: "NetBox Setup Project"
-        credential: netbox-creds
+        playbook: netbox_setup.yml
+        project: "netbox-setup-project"
+        credential: netbox-setup-api
         validate_certs: false
         controller_username: admin
         controller_password: ansible123!        
