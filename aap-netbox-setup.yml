@@ -49,6 +49,9 @@
           env:
             NETBOX_API: '{{ NETBOX_API }}'
             NETBOX_TOKEN: '{{ NETBOX_TOKEN }}'
+          extra_vars:
+            NETBOX_API: '{{ NETBOX_API }}'
+            NETBOX_TOKEN: '{{ NETBOX_TOKEN }}'
         state: present
         validate_certs: false
         
