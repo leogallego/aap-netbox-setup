@@ -97,6 +97,9 @@
       ansible.controller.inventory:
         name: netbox-setup-inventory
         organization: Default
+        validate_certs: false
+        controller_username: admin
+        controller_password: ansible123!
 
     # - name: (EXECUTION) Create a new Job Template
     #   ansible.controller.job_template:
