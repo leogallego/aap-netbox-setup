@@ -79,6 +79,8 @@
         scm_type: git
         scm_url: https://github.com/leogallego/netbox-setup.git
         validate_certs: false
+        controller_username: admin
+        controller_password: ansible123!
 
 
     - name: (EXECUTION) Create a new Job Template
@@ -92,6 +94,8 @@
         project: "NetBox Setup Project"
         credential: netbox-creds
         validate_certs: false
+        controller_username: admin
+        controller_password: ansible123!        
 
     - name: Debug SANDBOX_ID
       ansible.builtin.debug:
