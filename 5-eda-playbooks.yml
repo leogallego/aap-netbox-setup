@@ -69,3 +69,54 @@
         validate_certs: false
         controller_username: admin
         controller_password: ansible123!
+
+
+    - name: Create a workflow job template with nodes 
+      ansible.controller.workflow_job_template:
+        name: "Provision New Device Workflow"
+        description: "Workflow for NTP, VLAN and Banner"
+        inventory: "NetBox Dynamic Inventory"
+        workflow_nodes:
+          - identifier: NTP
+            unified_job_template:
+              organization:
+                name: Default
+              name: "Configure NTP Servers"
+              type: job_template
+            credentials: []
+            related:
+              success_nodes: []
+              failure_nodes: []
+              always_nodes:
+                - identifier: VLANs
+              credentials: []
+          - identifier: VLANs
+            all_parents_must_converge: false
+            unified_job_template:
+              organization:
+                name: Default
+              name: "Configure VLANs"
+              type: job_template
+            related:
+              success_nodes: []
+              failure_nodes: []
+              always_nodes:
+                - identifier: Banner
+              credentials: []
+          - identifier: Banner
+            all_parents_must_converge: false
+            unified_job_template:
+              organization:
+                name: Default
+              name: "Configure Login Banner"
+              type: job_template
+            related:
+              success_nodes: []
+              failure_nodes: []
+              always_nodes: []
+              credentials: []
+        validate_certs: false
+        controller_username: admin
+        controller_password: ansible123!
+
+            
