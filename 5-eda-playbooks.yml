@@ -37,7 +37,8 @@
         inventory: "NetBox Dynamic Inventory"
         playbook: "configure_ntp.yml"
         project: "NetBox Playbooks"
-        credential: "cat8000v-credential"
+        credentials: 
+          - "cat8000v-credential"
         validate_certs: false
         controller_username: admin
         controller_password: ansible123!
@@ -51,7 +52,9 @@
         inventory: "NetBox Dynamic Inventory"
         playbook: "configure_vlans.yml"
         project: "NetBox Playbooks"
-        credential: "cat8000v-credential"
+        credentials:
+          - "cat8000v-credential"
+          - "NetBox API"
         validate_certs: false
         controller_username: admin
         controller_password: ansible123!
