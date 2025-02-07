@@ -37,27 +37,27 @@
         inventory: "NetBox Dynamic Inventory"
         playbook: "configure_ntp.yml"
         project: "NetBox Playbooks"
-        credentials: 
+        credentials:
           - "cat8000v-credential"
         validate_certs: false
         controller_username: admin
         controller_password: ansible123!
 
-    - name: (EXECUTION) Create a Configure VLANS Job Template
-      ansible.controller.job_template:
-        name: "Configure VLANs"
-        job_type: "run"
-        organization: "Default"
-        state: "present"
-        inventory: "NetBox Dynamic Inventory"
-        playbook: "configure_vlans.yml"
-        project: "NetBox Playbooks"
-        credentials:
-          - "cat8000v-credential"
-          - "NetBox API"
-        validate_certs: false
-        controller_username: admin
-        controller_password: ansible123!
+    # - name: (EXECUTION) Create a Configure VLANS Job Template
+    #   ansible.controller.job_template:
+    #     name: "Configure VLANs"
+    #     job_type: "run"
+    #     organization: "Default"
+    #     state: "present"
+    #     inventory: "NetBox Dynamic Inventory"
+    #     playbook: "configure_vlans.yml"
+    #     project: "NetBox Playbooks"
+    #     credentials:
+    #       - "cat8000v-credential"
+    #       - "NetBox API"
+    #     validate_certs: false
+    #     controller_username: admin
+    #     controller_password: ansible123!
 
     - name: (EXECUTION) Create a Configure Login Banner Job Template
       ansible.controller.job_template:
@@ -74,7 +74,7 @@
         controller_password: ansible123!
 
 
-    - name: Create a workflow job template with nodes 
+    - name: Create a workflow job template with nodes
       ansible.controller.workflow_job_template:
         name: "Provision New Device Workflow"
         description: "Workflow for NTP, VLAN and Banner"
@@ -85,20 +85,6 @@
               organization:
                 name: Default
               name: "Configure NTP Servers"
-              type: job_template
-            credentials: []
-            related:
-              success_nodes: []
-              failure_nodes: []
-              always_nodes:
-                - identifier: VLANs
-              credentials: []
-          - identifier: VLANs
-            all_parents_must_converge: false
-            unified_job_template:
-              organization:
-                name: Default
-              name: "Configure VLANs"
               type: job_template
             related:
               success_nodes: []
@@ -121,5 +107,3 @@
         validate_certs: false
         controller_username: admin
         controller_password: ansible123!
-
-            
